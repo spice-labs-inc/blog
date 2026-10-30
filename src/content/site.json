@@ -3,9 +3,9 @@
     "label": "Get Started",
     "url": "https://www.spicelabs.io/get-started"
   },
-  "footer_text": "© 2025 Spice Labs. All rights reserved.",
-    "site_description": "Spice Labs: Know your Systems, Chart your Course. The easiest and fastest way to generate CBOMs at scale and manage your PQC journey.",
+  "footer_text": "© 2025-2026 Spice Labs. All rights reserved.",
+  "site_description": "Spice Labs: Know your Systems, Chart your Course. The easiest and fastest way to generate CBOMs at scale and manage your PQC journey.",
   "site_url": "https://blog.spicelabs.io",
-  "site_domain": "spicelabs.io",
-  "website_url": "https://www.spicelabs.io"
+  "website_url": "https://www.spicelabs.io",
+  "site_domain": "spicelabs.io"
 }

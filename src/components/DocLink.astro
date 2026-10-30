@@ -1,0 +1,52 @@
+---
+import { getCollection } from "astro:content";
+
+export interface Props {
+  to: string; // The doc slug (e.g., "howtos/quick-start")
+  children?: any;
+  class?: string;
+}
+
+const { to, class: className, children } = Astro.props;
+
+// Get all docs to build a lookup map
+const allDocs = await getCollection("posts", ({ data }) => {
+  return data.draft !== true;
+});
+
+// Find the target document
+const targetDoc = allDocs.find((doc) => doc.slug === to);
+
+if (!targetDoc) {
+  // In development, show a warning. In production, still render but with a warning class
+  console.warn(`DocLink: Document with slug "${to}" not found`);
+}
+
+const href = target ? `/posts/${targetDoc.slug}/` : `#broken-link-${to}`;
+const linkText = children || (targetDoc ? targetDoc.data.title : `[Missing: ${to}]`);
+const linkClass = className
+  ? `${className}${!targetDoc ? " broken-link" : ""}`
+  : !targetDoc
+    ? "broken-link"
+    : "";
+---
+
+<a href={href} class={linkClass} data-doc-slug={to}>
+  <slot>{linkText}</slot>
+</a>
+
+<style>
+  .broken-link {
+    color: #dc3545 !important;
+    text-decoration: line-through !important;
+    border: 1px dashed #dc3545 !important;
+    padding: 2px 4px !important;
+    border-radius: 3px !important;
+  }
+
+  .broken-link::after {
+    content: " [BROKEN]";
+    font-size: 0.8em;
+    color: #dc3545;
+  }
+</style>

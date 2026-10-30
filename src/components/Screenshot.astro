@@ -1,0 +1,38 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  width?: string;
+}
+
+const { src, alt, width = "600px" } = Astro.props;
+---
+
+<div class="screenshot-container" style={`--max-width: ${width}`}>
+  <img src={src} alt={alt} />
+</div>
+
+<style>
+  .screenshot-container {
+    margin: 2.5rem 0;
+    display: flex;
+    justify-content: left;
+  }
+
+  .screenshot-container img {
+    max-width: var(--max-width, 600px);
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow:
+      0 4px 6px rgba(0, 0, 0, 0.1),
+      0 2px 4px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .screenshot-container img {
+      max-width: 100%;
+    }
+  }
+</style>

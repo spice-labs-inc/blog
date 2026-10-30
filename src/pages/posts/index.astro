@@ -1,0 +1,15 @@
+---
+import { getCollection } from "astro:content";
+const posts = await getCollection("posts", ({ data }) => data.draft !== true);
+const sorted = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const redirectUrl = `/posts/${sorted[0].slug}/`;
+---
+
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content={`0; url=${redirectUrl}`} />
+    <script set:html={`window.location.href = "${redirectUrl}";`} />
+  </head>
+  <body></body>
+</html>

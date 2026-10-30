@@ -1,0 +1,84 @@
+---
+export interface Props {
+  type?: "tip" | "info" | "warning";
+  title?: string;
+}
+
+const { type = "tip", title } = Astro.props;
+
+// Define type-specific defaults
+const typeConfig = {
+  tip: {
+    icon: "💡",
+    defaultTitle: "Tip",
+    background: "rgba(255, 193, 7, 0.1)",
+    borderColor: "#ffc107"
+  },
+  info: {
+    icon: "ℹ️",
+    defaultTitle: "Info",
+    background: "rgba(0, 123, 255, 0.1)",
+    borderColor: "#007bff"
+  },
+  warning: {
+    icon: "⚠️",
+    defaultTitle: "Warning",
+    background: "rgba(220, 53, 69, 0.1)",
+    borderColor: "#dc3545"
+  }
+};
+
+const config = typeConfig[type];
+const displayTitle = title || config.defaultTitle;
+---
+
+<div class={`admonition admonition-${type}`}>
+  <div class="admonition-header">
+    <span class="admonition-icon">{config.icon}</span>
+    <span class="admonition-title">{displayTitle}</span>
+  </div>
+  <div class="admonition-content">
+    <slot />
+  </div>
+</div>
+
+<style
+  define:vars={{
+    bgColor: typeConfig[type].background,
+    borderColor: typeConfig[type].borderColor
+  }}
+>
+  .admonition {
+    margin: 24px 0;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid var(--borderColor);
+    background: var(--bgColor);
+  }
+
+  .admonition-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: var(--color-black);
+  }
+
+  .admonition-icon {
+    margin-right: 8px;
+    font-size: 1.1em;
+  }
+
+  .admonition-title {
+    font-size: 1rem;
+  }
+
+  .admonition-content {
+    color: var(--color-black);
+    line-height: 1.6;
+  }
+
+  .admonition-content :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

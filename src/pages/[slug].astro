@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => data.draft !== true);
+
+  // Create redirects for old URLs (slug without date prefix)
+  return posts.map((entry) => {
+    // Extract the slug without the date prefix (e.g., "2025-09-30-founder_post" -> "founder_post")
+    const slugWithoutDate = entry.slug.replace(/^\d{4}-\d{2}-\d{2}-/, "");
+
+    return {
+      params: { slug: slugWithoutDate },
+      props: { redirectUrl: `/posts/${entry.slug}/` }
+    };
+  });
+}
+
+const { redirectUrl } = Astro.props;
+---
+
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content={`0; url=${redirectUrl}`} />
+    <script set:html={`window.location.href = "${redirectUrl}";`} />
+  </head>
+  <body></body>
+</html>

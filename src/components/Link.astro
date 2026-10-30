@@ -1,0 +1,16 @@
+---
+export interface Props {
+  to: string;
+  children?: any;
+  class?: string;
+}
+
+const { to, class: className, children } = Astro.props;
+
+// Support both full paths and relative slugs
+const href = to.startsWith("/") ? to : `/posts/${to}/`;
+---
+
+<a href={href} class={className}>
+  <slot>{children}</slot>
+</a>

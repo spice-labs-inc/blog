@@ -1,0 +1,138 @@
+<script>
+  function initCodeCopy() {
+    // Create toast element
+    const toast = document.createElement("div");
+    toast.className = "copy-toast";
+    toast.textContent = "Copied!";
+    document.body.appendChild(toast);
+
+    function showToast() {
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2000);
+    }
+
+    async function copyToClipboard(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (err) {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+          return true;
+        } catch (err) {
+          document.body.removeChild(textArea);
+          return false;
+        }
+      }
+    }
+
+    function addCopyButtons() {
+      const codeBlocks = document.querySelectorAll("pre, .astro-code");
+
+      codeBlocks.forEach((block) => {
+        // Skip if copy button already exists
+        if (block.querySelector(".copy-button")) return;
+
+        // Create a wrapper div for the code block with fixed copy button
+        const wrapper = document.createElement("div");
+        wrapper.className = "code-block-wrapper";
+        wrapper.style.position = "relative";
+
+        // Insert wrapper before the block
+        block.parentNode.insertBefore(wrapper, block);
+        wrapper.appendChild(block);
+
+        // Create fixed copy button
+        const copyBtn = document.createElement("div");
+        copyBtn.className = "copy-btn-fixed";
+        copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="currentColor"><path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z"/></svg>`;
+        copyBtn.style.cssText = `
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+        background: rgba(241, 241, 241, 0.3);
+        border: 1px solid rgba(241, 241, 241, 0.2);
+        color: #f1f1f1;
+        border-radius: 6px;
+        cursor: pointer;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      `;
+
+        wrapper.appendChild(copyBtn);
+
+        const button = document.createElement("button");
+        button.className = "copy-button";
+        button.innerHTML = "📋";
+        button.title = "Copy code";
+        button.style.display = "none"; // Hide the actual button, use ::before instead
+
+        button.addEventListener("click", async () => {
+          // Get text content but exclude the copy button
+          const codeElement = block.cloneNode(true);
+          const copyButton = codeElement.querySelector(".copy-button");
+          if (copyButton) {
+            copyButton.remove();
+          }
+          const code = codeElement.textContent || "";
+          const success = await copyToClipboard(code);
+
+          if (success) {
+            button.innerHTML = "✓";
+            button.classList.add("copied");
+            showToast();
+
+            setTimeout(() => {
+              button.innerHTML = "📋";
+              button.classList.remove("copied");
+            }, 2000);
+          }
+        });
+
+        // Add click handler to the fixed copy button
+        copyBtn.addEventListener("click", async () => {
+          // Trigger the hidden button's click handler
+          button.click();
+        });
+
+        block.appendChild(button);
+      });
+    }
+
+    // Add copy buttons on page load
+    addCopyButtons();
+
+    // Re-add copy buttons when content changes (for SPA navigation)
+    const observer = new MutationObserver(() => {
+      addCopyButtons();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCodeCopy);
+  } else {
+    initCodeCopy();
+  }
+</script>

@@ -1,0 +1,86 @@
+---
+title: "A Startup Voyage"
+date: 2025-09-30
+author: dpp
+---
+
+Our modern business structures, starting with limited liability partnerships, were founded in the era of spice trading. The complexity of the voyages and the risks associated with the investments drove the creation of new business structures, including the limited liability partnership, and the invention of new technologies for better navigation: both in the name of risk reduction. Imagine the complexity of planning a voyage half way around the world to strike deals when both parties had little information about the counter-party.
+
+The incredible value of the spice trade drove these innovations.
+
+Modern computing and the internet are less than 50 years old and we are re-learning the lesson that mapping and navigation are the best ways to manage the complexity that the new drivers of business are forcing technology and security teams to confront. This is why Spice Labs exists. We hearken back to the spice trade for our name as we look to deliver powerful tools that allow organizations to navigate the chaos of their application/stack/systems.
+
+We empower our users to Know their Systems so they can Chart their Course.
+
+## Adoption over Security
+
+We, as humans, have done computer and communications technology wrong. We have prioritized adoption above all… and most importantly, adoption above security. “When it gets popular, we’ll add security,” is the startup refrain.
+
+In the previous millennium, that mattered less. There were a few hundred thousand people on the Internet (big “I” back then… it was a proper noun) and we all mostly trusted each other.
+
+Yes, there was TLS to secure the connection between your browser and your bank… but that was just about it. Everything else was about adoption.
+
+And as folks adopted technology, our stacks and our data centers became open source-infused and cloudified. [Pets became cattle](https://www.hava.io/blog/cattle-vs-pets-devops-explained).
+
+As a side note, imagine telling someone from the 1990s that your doorbell wasn’t working because a data center in Virginia was having a bad day. They’d lock you up for being absolutely crazy.
+
+But today, 70% of our species is connected. Your car won’t run if the [manufacturer’s servers go dark](https://pluralistic.net/2024/10/10/software-based-car/). Your lights and your doorbell and your oven and your furnace are all computers that depend on someone else’s computers. Your medical records, bank records, and all your other personal information is “[in the cloud](https://governor.ri.gov/press-releases/governor-mckee-issues-update-cybersecurity-breach-ribridges-system).”
+
+Yet somehow we’ve forgotten to record what was running where and when. Chaos reigns over the stampeding herds of cattle… those millions of computers running billions of programs containing who knows what\!
+
+The way we communicate, with few exceptions, is through these complex systems… systems that maybe, if we’re lucky, added enough security so that another system will be [hacked because that system is marginally less secure](https://folklore.usc.edu/meaning-behind-the-proverb-i-dont-have-to-outrun-the-bear/).
+
+And nobody knows – nobody understands – the incomprehensibly large set of interconnections and dependencies. Pure CHAOS\!
+
+We do know that 85% of these systems run, in part, on software that was made “free” and benefits society to the tune of [\> $8T (with a T)](https://www.thestack.technology/open-source-value-trillions-harvard/). AND very few pay for Open Source Software. Also, another very few understand that there ain’t no such thing as a free lunch.
+
+And it’s common for a corporate VP to have dozens or even hundreds of applications in their portfolio… each made up of tens or more discrete components… most relying on “free” software maintained by “[some random person in Nebraska](https://xkcd.com/2347/).”
+
+It’s time to start reining in complexity. It’s time to start building tools to give humans a better understanding of the connections across these complex systems. That’s why I started Spice Labs.
+
+## What We Do
+
+Spice Labs maps deployment artifacts and systems with cryptographic fingerprints, anchoring them to our continuously updated ten billion node OSS database and enrichment layers to drive confident, fact-based decisions.
+
+With comprehensive maps of your stack, replace guesswork with hard data. This enables faster decisions, reduced risk, and measurable progress across projects.
+
+Our technology surveys containers, virtual machines, and applications, identifying components and relationships even in legacy systems without Software Bills of Material. This empowers users and consultancies to navigate technical debt, scope modernization projects, quantify progress, and rapidly respond to incidents, ultimately saving time, controlling costs, and strengthening trust.
+
+## How We Do It
+
+- We started with math – We started with the concept that the dependencies across any application, across a stack of applications, across clusters of systems, can be described by [hash values](https://en.wikipedia.org/wiki/Hash_function) and trees of hash values. These values are not meaningful to humans, but they are both precise and easy for computers to both generate and manipulate. This is the way Git works.
+- Using math – We built a model, a series of [Artifact Dependency Graphs,](https://omnibor.io/) of all of Java, Debian, and Ubuntu open source.
+- Using graphs – We identify the hidden and latent connections among components, applications, stacks, software, systems. These graphs allow users to understand their systems like we understand geography and can plan voyages with maps.
+- [curl](https://en.wikipedia.org/wiki/CURL) first – We started big with a huge database that is mostly incomprehensible to humans and accessed via command line tools. The startup playbook says, “start small with a flashy demo, then build out the reality.” We prefer to start with the data at scale and evolve a UI on top of the data.
+- Building a graph database – We built tools to build and manage Artifact Dependency Graphs, including our own graph database… we proved the scalability and manageability of these tools by hosting a thirteen billion node database/graph on commodity hardware.
+- Sustainable Open Source – [Surveyor](https://github.com/spice-labs-inc/spice-labs-cli) allows any user to use our open source tools to build graphs of their proprietary (IT and OT) artifacts (applications, images, components, etc.) and upload them to our service. And because Surveyor is open source under an Apache 2 license, anyone can audit the code and understand what’s being run. And because we make money with our SaaS service, there’s no incentive for a rug-pull on our open source code.
+- Security – We added a twist. Every upload to our service is encrypted with a key specific to the Project. The uploaded information is kept encrypted with the Project’s key until it’s time to query the data. And when the Project is deleted and the key is destroyed, all Spice Labs access to the user’s data is gone. All Project data is managed in separate containers that, themselves, have an encrypted filesystem. _Spice Labs uses encryption to enforce its single data tenancy model_. So not the “get adoption, add security later” startup model.
+- Team – Our engineering team is mostly senior and mostly women. Not at all a Silicon Valley thing… and rather than vibe coding our UI or having someone on Fiverr knock out a demo site, we hire for the long haul. If someone makes it 6 months on the team, we expect them to stay for years. We invest in institutional knowledge.
+- Backups – We practiced back-up and restore of our systems. Why? If we lose the encryption keys (stored in [Hashicorp Vault](https://www.hashicorp.com/en/products/vault)), we lose our customers’ data. So we practiced. And we found all kinds of edge cases in our Terraform that led to a substantial refactor to separate concerns. Glad we did it now rather than when we are desperately trying to restore service and we learn that restoring Vault would require a full cold-start of the entire service. Absolutely not the usual startup playbook.
+
+## Join the Voyage
+
+To see it work on your own software, email [sales@spicelabs.io](mailto:sales@spicelabs.io).
+
+And we have this crazy business model: pay us a reasonable amount of money for the service. You are the customer, not the product. Your company’s data is your company’s data… we’re not going to mine it. Pay us a reasonable price for the service and get what you’re paying for. So, absolutely, positively not the startup playbook.
+
+## Help us Chart our Course
+
+We are at the beginning of the Spice Labs voyage.
+
+We talk about maps and the underlying APIs expose deeply nested graph data.
+
+Yet visualizing it is hard. Here’s a simple set of class files in a single moderately sized Java JAR file:  
+![](/assets/images/connection_circle.png)
+
+And here’s the map of class files and JAR files from a single source file:  
+![](/assets/images/source_class_jars.png)  
+Where the light blue circles are JAR files and the darker circles are class files.
+
+How do we turn the graph data into usable visualizations? What will the visualizations be used for? How do we harness the unique relationships among systems and containers and files and open source that we capture to be useful for different use cases?
+
+## Chart our collective Course
+
+As part of the voyage, you, the users, can join the conversation and influence the course for Spice Labs to deliver on the promise of helping you Know your Systems and Chart your Course.
+
+Thanks\!

@@ -1,0 +1,330 @@
+@import url(fonts.css);
+@import url(tokens.css);
+
+@layer reset;
+@layer defaults;
+@layer app;
+@layer utils;
+
+/* These are universal things that are sensible on basically any site, 
+ * fixing weird browser historical things */
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+
+  :root {
+    font-synthesis: none;
+    font-optical-sizing: auto;
+
+    min-height: 100svh;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  a:any-link {
+    color: inherit;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+  }
+
+  button.unbutton {
+    appearance: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    font: inherit;
+    border: none;
+    background-color: transparent;
+    text-align: inherit;
+  }
+}
+
+/* Variables and more opinionated foundations for building */
+@layer defaults {
+  :root {
+    background: var(--color-light);
+    color: var(--color-dark);
+    accent-color: var(--color-primary);
+    scroll-behavior: smooth;
+
+    font-family: var(--font-ui);
+    font-weight: var(--font-weight-normal);
+    font-size: 1rem;
+    line-height: 1.25rem;
+    --baseline-shift: 0.2em;
+    --shift: calc((1lh - 1em) / 2 + var(--baseline-shift));
+  }
+
+  section {
+    position: relative;
+  }
+
+  p {
+    margin-block: 1rlh;
+    transform: translateY(var(--shift));
+  }
+
+  button,
+  .button {
+    display: inline-block;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  li::marker {
+    line-height: inherit;
+  }
+}
+
+/** The core styles of the site that make it look like ours */
+@layer app {
+  main,
+  header,
+  footer,
+  section {
+    margin: 0;
+    padding: 0;
+  }
+
+  section {
+    padding: 1rlh;
+  }
+
+  p {
+    font-weight: 300;
+  }
+
+  /* Code block styling */
+  pre,
+  pre.astro-code,
+  .astro-code {
+    background: linear-gradient(135deg, #000015 0%, #1a1a1a 100%) !important;
+    color: #f1f1f1 !important;
+    padding: 32px !important;
+    border-radius: 12px !important;
+    margin: 24px 0 !important;
+    border: 1px solid rgba(241, 241, 241, 0.2) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    font-size: 0.9375rem !important;
+    line-height: 1.6 !important;
+    position: relative !important;
+    overflow: auto !important;
+  }
+
+  /* Copy button wrapper for non-scrolling positioning */
+  .code-block-wrapper {
+    position: relative !important;
+  }
+
+  .copy-btn-fixed:hover {
+    background: rgba(13, 230, 147, 0.4) !important;
+    border-color: rgba(13, 230, 147, 0.6) !important;
+    color: #0de693 !important;
+  }
+
+  /* Hidden button for functionality */
+  .copy-button {
+    display: none;
+  }
+
+  .copy-button:hover {
+    background: rgba(13, 230, 147, 0.2);
+    border-color: rgba(13, 230, 147, 0.4);
+    color: #0de693;
+  }
+
+  .copy-button.copied {
+    background: rgba(13, 230, 147, 0.3);
+    border-color: #0de693;
+    color: #0de693;
+  }
+
+  /* Toast notification */
+  .copy-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #0de693;
+    color: #000015;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+
+  .copy-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  h1,
+  .h1 {
+    margin-block: 1rlh;
+    font-size: 4.5rem;
+    line-height: 4rlh;
+  }
+
+  @media (max-width: 768px) {
+    h1,
+    .h1 {
+      font-size: 2.5rem;
+      line-height: 2.75rem;
+    }
+  }
+
+  h1,
+  .h1,
+  h2,
+  .h2,
+  h3,
+  .h3,
+  h4,
+  .h4 {
+    text-wrap: balance;
+    text-wrap: pretty;
+  }
+
+  :is(h1, .h1, h2, .h2, h3, .h3, h4, .h4) p {
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  button,
+  .button {
+    cursor: pointer;
+    background: var(--color-primary);
+    color: var(--color-dark);
+    border-radius: 999px;
+    min-height: 1.5rlh;
+    margin-block-end: 0.5rlh;
+    padding: 8px 16px;
+    border-style: none;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    white-space: nowrap;
+  }
+}
+
+/* Special-purpose classes which overriding any of makes no sense */
+@layer utils {
+  .layout-grid::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+
+    mix-blend-mode: difference;
+
+    background-size:
+      1rlh 1rlh,
+      1rlh 1rlh,
+      1rlh 1rlh;
+    background-position:
+      0rlh 0rlh,
+      0rlh 0rlh,
+      0rlh 0.5rlh;
+    background-image:
+      linear-gradient(to right, #fff4 1px, transparent 1px),
+      linear-gradient(to bottom, #fff4 1px, transparent 1px),
+      linear-gradient(to bottom, #fff2 1px, transparent 1px);
+  }
+
+  .baseline {
+    margin-block: 0 calc(var(--shift) * -1);
+    padding-block: var(--shift) 0;
+  }
+
+  .contain {
+    position: relative;
+  }
+
+  .fill-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  h1 strong {
+    color: var(--color-primary);
+  }
+
+  .bg-diamonds {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 100%;
+    bottom: 100%;
+    top: 0;
+    transform: rotate(-15deg) translate(-40%, -53%);
+    pointer-events: none;
+    background:
+      linear-gradient(
+          to bottom right,
+          rgb(31 219 125 / 0) 10%,
+          rgb(31 219 125 / 0.108) 18%,
+          rgb(31 219 125 / 0) 20%,
+          rgb(31 219 125 / 0) 22%,
+          rgb(31 219 125 / 0.088) 42%,
+          rgb(31 219 125 / 0) 44%
+        )
+        bottom right / 50% 50% no-repeat,
+      linear-gradient(
+          to bottom left,
+          rgb(31 219 125 / 0) 10%,
+          rgb(31 219 125 / 0.108) 18%,
+          rgb(31 219 125 / 0) 20%,
+          rgb(31 219 125 / 0) 22%,
+          rgb(31 219 125 / 0.088) 42%,
+          rgb(31 219 125 / 0) 44%
+        )
+        bottom left / 50% 50% no-repeat,
+      linear-gradient(
+          to top left,
+          rgb(31 219 125 / 0) 10%,
+          rgb(31 219 125 / 0.108) 18%,
+          rgb(31 219 125 / 0) 20%,
+          rgb(31 219 125 / 0) 22%,
+          rgb(31 219 125 / 0.088) 42%,
+          rgb(31 219 125 / 0) 44%
+        )
+        top left / 50% 50% no-repeat,
+      linear-gradient(
+          to top right,
+          rgb(31 219 125 / 0) 10%,
+          rgb(31 219 125 / 0.108) 18%,
+          rgb(31 219 125 / 0) 20%,
+          rgb(31 219 125 / 0) 22%,
+          rgb(31 219 125 / 0.088) 42%,
+          rgb(31 219 125 / 0) 44%
+        )
+        top right / 50% 50% no-repeat;
+  }
+}

@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+
+logo_url: /logomark.svg
+
+backend:
+  name: "github"
+  repo: spice-labs-inc/blog
+  branch: main
+  base_url: https://sveltia-cms-auth.spice-labs-inc.workers.dev
+
+media_folder: "public/images"
+public_folder: "/images"
+
+singletons:
+  - name: "fields"
+    label: "Fields"
+    file: "src/content/site.json"
+    format: json
+    fields:
+      - name: "cta"
+        label: "CTA"
+        widget: "object"
+        fields:
+          - { name: "label", widget: "string", label: "CTA Label" }
+          - { name: "url", widget: "string", label: "CTA URL" }
+      - name: "footer_text"
+        widget: "string"
+        label: "Footer Text"
+      - name: "site_description"
+        widget: "text"
+        label: "Site Description"
+      - name: "site_url"
+        widget: "string"
+        label: "Site URL"
+      - name: "website_url"
+        widget: "string"
+        label: "Website URL"
+      - name: "site_domain"
+        widget: "string"
+        label: "Site Domain"
+
+collections:
+  - name: "authors"
+    label: "Authors"
+    folder: "src/content/authors"
+    create: true
+    delete: false
+    extension: "md"
+    identifier_field: "id"
+    fields:
+      - name: "id"
+        label: "ID"
+        widget: "string"
+        hint: "Short identifier (e.g., 'dpp', 'jdoe')"
+      - name: "name"
+        label: "Full Name"
+        widget: "string"
+        required: false
+      - name: "title"
+        label: "Title"
+        widget: "string"
+        required: false
+        hint: "Job title or role (e.g., 'CEO', 'Software Engineer')"
+      - name: "avatar"
+        label: "Avatar"
+        widget: "image"
+        required: false
+        hint: "Author headshot or avatar image"
+      - name: "bio"
+        label: "Bio"
+        widget: "text"
+        required: false
+
+  - name: "posts"
+    label: "Posts"
+    folder: "src/content/posts"
+    create: true
+    delete: false
+    extension: "mdx"
+    identifier_field: "title"
+    fields:
+      - name: "title"
+        label: "Title"
+        widget: "string"
+      - name: "description"
+        label: "Description"
+        widget: "text"
+        required: false
+      - name: "date"
+        label: "Date"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+      - name: "author"
+        label: "Author"
+        widget: "relation"
+        collection: "authors"
+        search_fields: ["name", "id"]
+        value_field: "id"
+        display_fields: ["name", "id"]
+      - name: "body"
+        label: "Body"
+        widget: "markdown"

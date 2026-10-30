@@ -1,0 +1,89 @@
+---
+title: "Multipublishing Scala from Github Workflows"
+date: 2025-09-23
+author: sdh
+---
+
+# Background
+
+Github workflows allow the creation of continuous integration in your code respository. The available infrastructure provides the ability to build and publish code written in a myriad of languages using many different build environments. One of these capabilities is to trigger an action when you create a release.
+
+Scala provides a tool, [sbt](https://www.scala-sbt.org/), which provides functionality for building, testing and publishing multiple hierarchical projects.
+
+sbt can publish jar files to a maven respository.
+
+All these pieces fit together well enough so that making a github release auto-publish to github code spaces or to maven central is a fairly low-friction task.
+
+What if you want to publish to both? Well, that's where things get tricky.
+
+# Challenges
+
+**Sbt doesn't like to publish to more than one destination**
+This can be worked around by using the sbt plug-in [sbt-publish-more](https://github.com/laughedelic/sbt-publish-more), but it doesn't work for us here. Why? Publishing to github packages works through the verb `publish` and maven central needs the verb `publishSigned` and `sonaRelease`. The github packages won't work with `publishSigned` and maven central won't work with `publish`.
+
+**sbt only wants live .sbt files in the hierarchy**
+sbt walks the directories and looks for multiple projects with their own sbt files, so you can't instruct sbt to select a particular root file.
+
+What you _can_ do is have an inert build file and make your github action do the juggling.
+
+Assume that you have a file, `build.sbt` for github and second named `build.sbt.maven` for maven central. Then you can do this from within the github yaml:
+
+```yaml
+- name: Publish JARs to GitHub Packages
+    run:
+        sbt +publish
+- name: Publish JARs to maven central
+    run:
+        mv build.sbt build.sbt.ghc && mv build.sbt.maven build.sbt "+publishSigned ; sonaRelease"
+```
+
+**Note** you will need to set appropriate environment variables for github publishing in the first step and and the appropriate PGP secrets in the second.
+
+This approach works and thanks, I hate it. Why? Because there is duplication of functionality across the two .sbt files. This is a clear violation of the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principal.
+
+As such, I put a comment in both files to warn future me that any change I make in one, I have to make in the other.
+
+There are, of course, ways around this. One way is to generate the sbt file from pieces rather than using two separate files. This will work, but it creates a hidden step which may not be obvious for a new engineer or could create unexpected behavior in day-to-day work.
+
+There is another solution, however: label the publishing destination in the environment in the yaml and use code in the build.sbt to switch between them:
+
+```scala
+// the label to use for maven-central
+val _mavenCentral = "maven-central"
+val _isMavenCentralPublish = sys.env.getOrElse("PUBLISHING_DESTINATION", _mavenCentral) == _mavenCentral
+
+// set the repo for your project
+val repo = "https://maven.pkg.github.com/YOUR-ORGANIZATION/YOUR-REPO"
+val githubResolver = Some("GitHub Package Registry" at repo)
+
+ThisBuild / publishTo := {
+  val log = sLog.value
+  if (_isMavenCentralPublish) {
+    log.info("setting publishTo to localStaging")
+    localStaging.value
+  } else {
+    log.info("setting publishTo to githubResolver")
+    githubResolver
+  }
+}
+
+```
+
+This requires a change to the yaml:
+
+```yaml
+- name: Publish JARs to GitHub Packages
+    run:
+        sbt +publish
+    env:
+        PUBLISHING_DESTINATION: "github-packages"
+- name: Publish JARs to maven central
+    run:
+        build.sbt "+publishSigned ; sonaRelease"
+    env:
+        PUBLISHING_DESTINATION: "maven-central"
+```
+
+**Note** it looks like it would make more sense to factor the code to have a single resolver initialized outside the `publishTo` setting, but that doesn't work as you'd like because `localStaging.value` is not accessible outside the setting and I wasn't able to construct a compatible type from the url resolver.
+
+If you're trying to publish to github and to maven central and are stuck, hopefully this has helped you find other approaches to your multi-publishing tasks and you can make one of these things work for you.

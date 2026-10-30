@@ -1,0 +1,54 @@
+---
+title: "Introducing Spice Labs and the Hyperscale System of Record for Software"
+date: 2024-12-10
+author: dpp
+---
+
+## Know what’s running and what’s been deployed across an organization’s estate.
+
+Sources of truth are critical to the evolution of human systems. Consider the impact the following sources of truth have had on society:
+
+- Maps as a source of truth unlocked travel and commerce
+- Time as a source of truth unlocked [marine navigation](https://en.wikipedia.org/wiki/Marine_chronometer) in the 1700s
+- The telegraph and instantaneous communication as a source of distributed truth enabled the modern state
+- [ACID databases](https://en.wikipedia.org/wiki/ACID) as the source of truth enabled modern banking
+- GPS and the cell phone as the source of truth for location and travel enables modern travel and logistics
+- GitHub as the source of truth for source code enabled modern cloud software delivery
+
+A typical business will build and deploy software artifacts thousands of times per day to hundreds of servers… or more. Keeping track of what has been deployed, and where and when is an exercise in complexity that begs comprehension.
+
+There are artifacts of these deploys that can be manually correlated when producing compliance reports, responding to cyber incidents, and other activities that businesses engage in every day.
+Yet there’s currently no system of record that can answer the question “what was running on machine X three days ago at noon?” Or a tool that can answer: “where across our estate have we deployed a vulnerable version of log4j in the last month?” Or “How can we document so that each push of our app to the cloud is as secure, or more secure, than the previous release?”
+
+You can get an your up-to-the-second accurate bank balance anywhere in the world. Why can’t you do a similar query to determine what’s running on your organization’s cloud and data center applications?
+
+With Spice Labs, you can.
+
+Spice Labs uses the same technology that git uses to reduce the complex set of “stuff” that goes into a software release into a single unique number known as a “gitoid.” [OmniBOR](https://omnibor.dev), the open specification, describes how to compute a cryptographic [Merkle Tree](https://en.wikipedia.org/wiki/Merkle_tree) of all the artifacts that went into a release. We call this an the Artifact Dependency Graph or ADG. The ADG provides the same unique number, but for the contents of a deployed artifact.
+
+This is an “intrinsic” identifier because it is based on the exact bytes that make up each file and all the files taken together. Every system will compute the identifier the same way given the same files. This is like longitude and latitude… a mathematical representation of a place or a collection of files.
+
+We are used to referring to software by extrinsic identifiers: the release tag in git, the [Package URL](https://github.com/package-url/purl-spec), the name and version. Humans are good with extrinsic identifiers… that’s why we have street names and numbers for addresses rather than longitude and latitude.
+
+Google Maps bridges between intrinsic and extrinsic identifiers: the longitude and latitude reported by the GPS chip in your phone and the street address. It converts “38°53′52″N 77°02′11″W “ into 1600 Pennsylvania Avenue, Washington, DC, USA, making it far easier for pizza to be delivered to the White House.
+
+Spice Labs has compiled a a mapping between the ADG of millions of software packages and the Package URL for the artifacts. We call this the [SaLAD](https://spicesalad.org) (Spice Labs Artifact Dependencies).
+
+Just as Spice Labs’ [Goat Rodeo](https://goatrodeo.cc) open source tool builds ADGs for open source software, it can be used to build ADGs for proprietary systems either by examining artifacts post-build in an artifact repository (Artifactory, DockerHub, etc.) or during the build process. And these ADGs are associated with the extrinsic identifiers related to software release: name and version.
+
+Organizations capture deploy events in logs today. This is how Incident Responders and Software Engineers determine release versions when triaging cybersecurity incidents or tracking down bugs.
+
+By correlating these deploy events with ADGs, Spice Labs allows users to determine what was running on a system at any time. By joining this data with the SaLAD, Spice Labs can tell a user what open source software was running on a system, even if that open source software was [not listed in an SBOM](https://www.csoonline.com/article/3596697/kicking-dependency-why-cybersecurity-needs-a-better-model-for-handling-oss-vulnerabilities.html).
+
+The scale of the SaLAD is currently 2 billion nodes. It’s running on a commodity box that costs $150/mo and can serve queries faster than can fit through the 1gbps NIC. Doing graph traversals and joins and other operations at scale is part of the technology Spice Labs has developed.
+
+Spice Labs initial use cases include:
+
+- Incident Response: what was running on a system at the time of an incident and what were the known CVEs?
+- Major Incident Response: give me a burn-down chart of the systems running vulnerable versions of log4j over the last week so I can keep the C-suite and the board apprised
+- Breach Notification: what was running on the breached system, even if the breach is discovered months later, and what were the known CVEs _at the time of the breach_?
+- Automating compliance reporting… turn the manual process of putting together lists of systems and open source that they were running into a simple query
+
+Just as accurate time keeping allowed voyages across oceans, having a Hyperscale System of Record will allow security teams to manage the risk of their systems the way the rest of the business manages risk: with visibility and proactively.
+
+We look forward to your participation in the Spice Labs journey!

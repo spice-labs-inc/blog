@@ -1,0 +1,134 @@
+---
+import logo from "../assets/logo.svg";
+import Image from "astro/components/Image.astro";
+import site from "@/content/site.json";
+---
+
+<footer>
+  <section id="footer">
+    <a href={site.website_url}>
+      <div id="logo">
+        <Image src={logo} alt="Spice Labs Logo" width="223" height="48" />
+      </div>
+    </a>
+
+    <div class="nav">
+      <ul>
+        <li><a href={site.website_url + "#team"}>Team & Advisors</a></li>
+        <li><a href={site.website_url + "#contact"}>Contact</a></li>
+        <li><a href={site.website_url + "#careers"}>Careers</a></li>
+        <li><a href={site.website_url + "#resources"}>Resources</a></li>
+      </ul>
+      <ul>
+        <li><a href="https://www.linkedin.com/company/spice-labs-inc">LinkedIn</a></li>
+        <li><a href="https://documents.spicelabs.io/privacy/">Privacy Policy</a></li>
+        <li><a href="https://documents.spicelabs.io/terms/">Terms of Service</a></li>
+        <li>
+          <a href="/feed.xml" class="rss-link">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="16"
+              viewBox="0 0 24 24"
+              width="16"
+              fill="currentColor"
+            >
+              <path d="M0 0h24v24H0z" fill="none"></path>
+              <circle cx="6.18" cy="17.82" r="2.18"></circle>
+              <path
+                d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"
+              ></path>
+            </svg>
+            RSS Feed
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="copyright">
+      © {new Date().getFullYear()} Spice Labs. All rights reserved.
+    </div>
+  </section>
+</footer>
+
+<style>
+  #footer {
+    position: relative;
+    min-height: 466px;
+    width: 100%;
+    color: var(--color-light);
+    background: url("/images/FooterBackground.svg") no-repeat center / 100% 100%;
+    background-color: var(--color-black);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    padding-bottom: 3.5rem;
+    box-sizing: border-box;
+  }
+
+  #logo {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-self: flex-start;
+    padding-top: 60px;
+  }
+
+  .nav {
+    display: flex;
+    gap: 2rem;
+    justify-content: flex-end;
+  }
+
+  .nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav li {
+    margin-bottom: 0.5rem;
+  }
+
+  .nav a {
+    color: var(--color-light);
+    text-decoration: none;
+  }
+
+  .rss-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .rss-link svg {
+    vertical-align: middle;
+  }
+
+  .copyright {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 0.8rem;
+    opacity: 0.6;
+    width: max-content;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    #footer {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 1.5rem;
+    }
+    .nav {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
+</style>
